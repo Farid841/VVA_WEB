@@ -50,12 +50,13 @@ class user
     public function getUser($user, $password)
     {
         try {
-            $sql = "select * from users where username = :username AND password = :password ";
+            $sql = "select * from compte where user = :username AND mdp = :password ";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':username', $user);
             $stmt->bindparam(':password', $password);
             $stmt->execute();
             $result = $stmt->fetch();
+            var_dump($password);
             return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
