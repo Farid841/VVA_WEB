@@ -13,7 +13,7 @@ class crud
     // function to insert a new record into the attendee database
 
     public function inserthebergement(
-        $noheb,
+
         $codetypeheb,
         $nomheb,
         $bnplaceheb,
@@ -29,12 +29,13 @@ class crud
     ) {
         try {
             // define sql statement to be executed
-            $sql = "INSERT INTO hebergement (:noheb, :codetypeheb, :nomheb, :bnplaceheb, :surfaceheb, :internet, :anneeheb, :secteurheb, :orientationheb,
-                :etatheb, :description, :photoheb, :tarifsemheb) VALUES (:fname,:lname,:dob,:email,:contact,:specialty,:avatar_path)";
+            $sql = "INSERT INTO `hebergement`( `CODETYPEHEB`, `NOMHEB`, `NBPLACEHEB`, `SURFACEHEB`, `INTERNET`, `ANNEEHEB`, `SECTEURHEB`, `ORIENTATIONHEB`, `ETATHEB`, `DESCRIHEB`, `PHOTOHEB`, `TARIFSEMHEB`) VALUES (:codetypeheb, :nomheb, :bnplaceheb, :surfaceheb, :internet, :anneeheb, :secteurheb, :orientationheb,
+            :etatheb, :dscription, :photoheb, :tarifsemheb)";
+
+
             //prepare the sql statement for execution
             $stmt = $this->db->prepare($sql);
             // bind all placeholders to the actual values
-            $stmt->bindparam(':noheb', $noheb);
             $stmt->bindparam(':codetypeheb', $codetypeheb);
             $stmt->bindparam(':nomheb', $nomheb);
             $stmt->bindparam(':bnplaceheb', $bnplaceheb);
@@ -44,7 +45,7 @@ class crud
             $stmt->bindparam(':secteurheb', $secteurheb);
             $stmt->bindparam(':orientationheb', $orientationheb);
             $stmt->bindparam(':etatheb', $etatheb);
-            $stmt->bindparam(':description', $description);
+            $stmt->bindparam(':dscription', $description);
             $stmt->bindparam(':photoheb', $photoheb);
             $stmt->bindparam(':tarifsemheb', $tarifsemheb);
 
@@ -99,10 +100,11 @@ class crud
         }
     }
     // le reste est non traité
-    public function getAttendees()
+    public function gethebergements()
     {
         try {
-            $sql = "SELECT * FROM `attendee` a inner join specialties s on a.specialty_id = s.specialty_id";
+            $sql = "SELECT `NOHEB`, `NOMHEB`, `NBPLACEHEB`, `SURFACEHEB`, `INTERNET`, `ANNEEHEB`, `SECTEURHEB`, `ORIENTATIONHEB`, `ETATHEB`, `DESCRIHEB`, `PHOTOHEB`, `TARIFSEMHEB`, NOMTYPEHEB FROM `hebergement` , type_heb WHERE hebergement.CODETYPEHEB=type_heb.CODETYPEHEB
+            ";
             $result = $this->db->query($sql);
             return $result;
         } catch (PDOException $e) {
@@ -111,11 +113,10 @@ class crud
         }
     }
 
-    public function getAttendeeDetails($id)
+    public function getHebergementDetails($id)
     {
         try {
-            $sql = "select * from attendee a inner join specialties s on a.specialty_id = s.specialty_id 
-                where attendee_id = :id";
+            $sql = "SELECT DISTINCT *  FROM  hebergement, type_heb, resa, etat_resa, semaine WHERE hebergement.CODETYPEHEB=:id AND hebergement.CODETYPEHEB = type_heb.CODETYPEHEB AND hebergement.NOHEB = resa.NOHEB AND resa.CODEETATRESA = etat_resa.CODEETATRESA  And resa.DATEDEBSEM = semaine.DATEDEBSEM";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':id', $id);
             $stmt->execute();
@@ -127,10 +128,10 @@ class crud
         }
     }
 
-    public function deleteAttendee($id)
+    public function deleteHebergement($id)
     {
         try {
-            $sql = "delete from attendee where attendee_id = :id";
+            $sql = "DELETE FROM `hebergement` WHERE NOHEB=:id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':id', $id);
             $stmt->execute();
@@ -141,10 +142,10 @@ class crud
         }
     }
 
-    public function getSpecialties()
+    public function getTypeHebergement()
     {
         try {
-            $sql = "SELECT * FROM `specialties`";
+            $sql = "SELECT * FROM type_heb ";
             $result = $this->db->query($sql);
             return $result;
         } catch (PDOException $e) {
@@ -156,9 +157,22 @@ class crud
     public function getSpecialtyById($id)
     {
         try {
-            $sql = "SELECT * FROM `specialties` where specialty_id = :id";
+            $sql = "SELECT * FROM type_heb where codetypeheb = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':id', $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return $result;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+    public function GetSemaine()
+    {
+        try {
+            $sql = "SELECT * FROM type_heb ";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch();
             return $result;

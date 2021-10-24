@@ -11,16 +11,18 @@ if (isset($_POST['submit_connexion'])) {
     $new_password = md5($password . '' . $login);
     $user = new user($pdo);
     $result = $user->getUser($login, $new_password);
-    var_dump($result);
 
     if (!$result) {
         echo '<div class="alert alert-danger">Username or Password is incorrect! Please try again. </div>';
     } else {
+
         $_SESSION['login'] = $login;
-        $_SESSION['username'] = $result['NOMCOMPTE'];
+        $_SESSION['typecompte'] = $result['TYPECOMPTE'];
+        //$_SESSION['alluserdata'] = $result; faire que su besoin 
 
 
         echo '<div class="alert alert-success">Congrats! You can now log in using your username and password</div>';
+        header('index.php');
     }
 }
 ?>
