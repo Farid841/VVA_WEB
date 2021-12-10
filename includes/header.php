@@ -1,7 +1,5 @@
-<?php //This includes the session file. This file contains code that starts/resumes a session. 
-//By having it in the header file, it will be included on every page, allowing session capability to be used on every page across the website.
+<?php
 include_once 'includes/session.php';
-var_dump($_SESSION);
 ?>
 
 
@@ -17,11 +15,9 @@ var_dump($_SESSION);
 <?php //call css file php
 require_once('includes/css.php');
 
-var_dump($_SESSION);
-
 ?>
 
-<body>
+<body class="w3-light-grey">
 
 
 
@@ -38,12 +34,16 @@ var_dump($_SESSION);
 
             <?php if ($_SESSION['typecompte'] == "adm") { ?>
                 <a href='manage_rental.php' class='w3-bar-item w3-button w3-padding-large w3-theme-d4'>Gerer Hebergement </a>
+                <a href='add_rental.php' class='w3-bar-item w3-button w3-padding-large w3-theme-d4'>Ajouter </a>
             <?php } elseif ($_SESSION['typecompte'] == "usr") {
                 echo "<a href=mes_reservations' class='w3-bar-item w3-button w3-padding-large w3-theme-d4'>Mes Reservations</a>";
             }
             ?>
             <a class="w3-bar-item w3-button  w3-hide-small w3-right w3-padding-large w3-hover-white" href="logout.php">Logout </a>
             <a class="w3-bar-item w3-button  w3-hide-small w3-right w3-padding-large w3-hover-white" href=""><span>Hello !<?php echo $_SESSION['login'] ?></span> </a>
+            <a class="w3-bar-item w3-button  w3-hide-small w3-right w3-padding-large w3-hover-white" href=""><span>mesRes
+
+                </span> </a>
 
         <?php }
         if (empty($_SESSION['login'])) { ?>

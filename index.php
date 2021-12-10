@@ -14,7 +14,6 @@ require_once('includes/header.php');
         <?php
         // recuperationdes donnée de la base de donnée et affiché dans les champs que va remplire l'utilisateur
         $results = $crud->gethebergements();
-        var_dump($results);
 
         ?>
 
@@ -29,39 +28,76 @@ require_once('includes/header.php');
                             if (!$semaine) {
                                 echo '<option value="null"> Nodata</option>';
                             } else {
+                                var_dump($semaine);
                                 $i = 1;
                                 foreach ($semaine as $key => $value) {
-                                    $datefinsem = $value['DATAFINSEM'];
-                                    $datedebutsem = $value['DATADDEBSEM'];
-                                    echo "<option value='$datefinsem' S$i: $datedebutsem /  $datefinsem </option>";
+                                    $datefinsem = $value['DATEFINSEM'];
+                                    $datedebutsem = $value['DATEDEBSEM'];
+                                    echo "<option value='$datefinsem'> S$i: $datedebutsem /  $datefinsem </option>";
+                                    //echo "<option value=''>" . $value['DATEFINSEM'] . "</option>";
+                                    $i++;
+                                }
+                            }
+
+                            ?>
+                        </select>
+
+                    </div>
+                    <div class="w3-half">
+                        <label><i class="fa fa-calendar-o"></i> Type</label>
+                        <select class="w3-input w3-border" name="type" id="type">
+                            <?php
+                            $type = $crud->getAllTypeHebergement();
+                            if (!$type) {
+                                echo '<option value="null"> Nodata</option>';
+                            } else {
+                                $i = 1;
+                                foreach ($type as $key => $value) {
+                                    $nomtype = $value['NOMTYPEHEB'];
+                                    $codetype = $value['CODETYPEHEB'];
+
+                                    echo "<option value='$codetype'> $nomtype </option>";
                                     $i++;
                                 }
                             }
                             ?>
                         </select>
                     </div>
-                    <div class="w3-half">
-                        <label><i class="fa fa-calendar-o"></i> Type</label>
-                        <select class="w3-input w3-border" name="type" id="type">
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="mercedes">Mercedes</option>
-                            <option value="audi">Audi</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="w3-row-padding" style="margin:8px -16px;">
                     <div class="w3-half w3-margin-bottom">
                         <label><i class="fa fa-male"></i> Adults</label>
-                        <input class="w3-input w3-border" type="number" value="1" name="Adults" min="1" max="6">
+                        <select class="w3-input w3-border" name="nbplace" id="nbplace">
+                            <?php
+                            $nb = $crud->GetNbPlace();
+                            if (!$nb) {
+                                echo '<option value="null"> Nodata</option>';
+                            } else {
+                                var_dump($nb);
+
+                                foreach ($nb as $key => $value) {
+                                    $nbplace = $value['NBPLACEHEB'];
+                                    echo "<option value='$nbplace'> $nbplace </option>";
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="w3-half">
                         <label><i class="fa fa-child"></i> Where</label>
                         <select class="w3-input w3-border" name="where" id="where">
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="mercedes">Mercedes</option>
-                            <option value="audi">Audi</option>
+
+                            <?php
+                            $secteur = $crud->GetSecteur();
+                            if (!$secteur) {
+                                echo '<option value="null"> Nodata</option>';
+                            } else {
+                                foreach ($secteur as $key => $value) {
+                                    $sec = $value['SECTEURHEB'];
+                                    echo "<option value='$sec'> $sec </option>";
+                                }
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
@@ -78,74 +114,45 @@ require_once('includes/header.php');
         <h3>Rooms</h3>
         <p>Make yourself at home is our slogan. We offer the best beds in the industry. Sleep well and rest well.</p>
     </div>
-    <--! <div class="w3-row-padding">
-        <div class="w3-col m3">
-            <label><i class="fa fa-calendar-o"></i> Check In</label>
-            <input class="w3-input w3-border" type="week" id="week" name="week" required>
-        </div>
-        <div class="w3-col m3">
-            <label><i class="fa fa-calendar-o"></i> Type</label>
-            <select class="w3-input w3-border" name="type" id="type">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
-            </select>
-        </div>
-        <div class="w3-col m2">
-            <label><i class="fa fa-male"></i> Adults</label>
-            <input class="w3-input w3-border" type="number" placeholder="1">
-        </div>
-        <div class="w3-col m2">
-            <label><i class="fa fa-child"></i> where</label>
-            <select class="w3-input w3-border" name="type" id="type">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
-            </select>
-        </div>
-        <div class="w3-col m2">
-            <label><i class="fa fa-search"></i> Search</label>
-            <button class="w3-button w3-block w3-black">Search</button>
-        </div>
 </div>
 
-<div class="w3-row-padding w3-padding-16">
+<?php
+
+$meshebergement = $crud->gethebergements();
+foreach ($meshebergement as $nbligne => $hebergement) {
+
+    if ($nbligne % 3 == 0) {
+        echo '<div class="w3-row-padding w3-padding-16">';
+    }
+
+
+?>
     <div class="w3-third w3-margin-bottom">
-        <img src="uploads/1789654123.jpg" alt="Norway" style="width:100%">
+        <img src="<?php echo  $hebergement['PHOTOHEB']; ?>" alt="Photo" style="width:100%">
         <div class="w3-container w3-white">
-            <h3>Single Room</h3>
-            <h6 class="w3-opacity">From $99</h6>
-            <p>Single bed</p>
-            <p>15m<sup>2</sup></p>
-            <p class="w3-large"><i class="fa fa-bath"></i> <i class="fa fa-phone"></i> <i class="fa fa-wifi"></i></p>
-            <button class="w3-button w3-block w3-black w3-margin-bottom">Choose Room</button>
+            <h3><?php echo  $hebergement['NOMHEB']; ?></h3>
+            <h6 class="w3-opacity">From € <?php echo  $hebergement['TARIFSEMHEB']; ?></h6>
+            <p>Place:<?php echo  $hebergement['NBPLACEHEB']; ?></p>
+            <p>surface:<?php echo  $hebergement['SURFACEHEB']; ?>m<sup>2</sup></p>
+            <p class="w3-large"><i class="fa fa-bath"></i> <i class="fa fa-phone"> </i> <?php if ($hebergement['INTERNET'] == true) {; ?> <i class="fa fa-wifi"></i> <?php } ?> </p>
+            <a href="rental.php?id=<?php echo $hebergement['NOHEB']; ?>"> <button class="w3-button w3-block w3-black w3-margin-bottom">Choose Room</button></a>
         </div>
     </div>
-    <div class="w3-third w3-margin-bottom">
-        <img src="uploads/1789654123.jpg" alt="Norway" style="width:100%">
-        <div class="w3-container w3-white">
-            <h3>Double Room</h3>
-            <h6 class="w3-opacity">From $149</h6>
-            <p>Queen-size bed</p>
-            <p>25m<sup>2</sup></p>
-            <p class="w3-large"><i class="fa fa-bath"></i> <i class="fa fa-phone"></i> <i class="fa fa-wifi"></i> <i class="fa fa-tv"></i></p>
-            <button class="w3-button w3-block w3-black w3-margin-bottom">Choose Room</button>
-        </div>
-    </div>
-    <div class="w3-third w3-margin-bottom">
-        <img src="uploads/1789654123.jpg" alt="Norway" style="width:100%">
-        <div class="w3-container w3-white">
-            <h3>Deluxe Room</h3>
-            <h6 class="w3-opacity">From $199</h6>
-            <p>King-size bed</p>
-            <p>40m<sup>2</sup></p>
-            <p class="w3-large"><i class="fa fa-bath"></i> <i class="fa fa-phone"></i> <i class="fa fa-wifi"></i> <i class="fa fa-tv"></i> <i class="fa fa-glass"></i> <i class="fa fa-cutlery"></i></p>
-            <button class="w3-button w3-block w3-black w3-margin-bottom">Choose Room</button>
-        </div>
-    </div>
+
+
+<?php
+    if ($nbligne % 3) {
+    }
+    echo "</ div>";
+}
+?>
 </div>
+
+
+
+
+
+
 
 <div class="w3-row-padding" id="about">
     <div class="w3-col l4 12">

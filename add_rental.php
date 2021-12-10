@@ -8,8 +8,8 @@ if ($_SESSION['typecompte'] = "adm") {
 
 
     // Ajouter hebergement 
-    $results = $crud->getTypeHebergement();
-    var_dump($results);
+    $results = $crud->getAllTypeHebergement();
+
 
     if (isset($_POST['submit'])) {
         $type = $_POST['type'];
@@ -19,7 +19,7 @@ if ($_SESSION['typecompte'] = "adm") {
         $internet = $_POST['internet'];
         $annee = $_POST['annee'];
         $secteur = $_POST['secteur'];
-        $oriention = $_POST['orientation'];
+        $orientation = $_POST['orientation'];
         $etat = $_POST['etat'];
         $description = $_POST['description'];
         $photo = $_POST['photo'];
@@ -33,27 +33,30 @@ if ($_SESSION['typecompte'] = "adm") {
             $internet,
             $annee,
             $secteur,
-            $oriention,
+            $orientation,
             $etat,
             $description,
             $photo,
             $tarif
         );
         if (!$res) {
-            include('includes/errormessage.php');
+            // include('includes/errormessage.php');
+            echo 'KO';
         } else {
-            include('includes/successmessage.php');
+            echo "OK";
+            // header("Location: manage_rental.php");
+            echo "<script> window.location='manage_rental.php'  </script>";
         }
     }
 
 
 ?>
 
-    <div class="w3-container w3-white w3-padding-16">
+    <div class="w3-container  w3-padding-100">
 
         <h1 class="text-center">Ajouter Hebergement</h1>
 
-        <form method="post" action="">
+        <form class=" w3-container" method="post" action="">
             <input type="hidden" name="id" />
             <div class="form-group">
                 <label for="firstname">Type hebergement </label>
@@ -67,7 +70,7 @@ if ($_SESSION['typecompte'] = "adm") {
             </div>
             <div class="form-group">
                 <label for="lastname">Nom hebergement </label>
-                <input type="text" class="w3-input w3-border" id="nom" name="nom" required>
+                <input type="text" class="w3-input w3-border" id="nom" name="nom">
             </div>
             <div class="form-group">
                 <label for="dob">Nombre de place</label>
@@ -93,20 +96,20 @@ if ($_SESSION['typecompte'] = "adm") {
                 <input type="text" class="w3-input w3-border" id="secteur" name="secteur" required>
             </div>
             <div class="form-group">
-                <label for="orientation">Oreintation</label>
-                <input type="text" class="w3-input w3-border" id="orientation" name="oriention" required>
+                <label for="orientation">orientation</label>
+                <input type="text" class="w3-input w3-border" id="orientation" name="orientation" required>
             </div>
             <div class="form-group">
                 <label for="etat">Etat hebergement</label>
-                <input type="text" class="w3-input w3-border" id="etat" name="etathebergement" required>
+                <input type="text" class="w3-input w3-border" id="etat" name="etat" required>
             </div>
             <div class="form-group">
                 <label for="dob">Description</label>
-                <input type="number" class="w3-input w3-border" id="description" name="description">
+                <input type="text" class="w3-input w3-border" id="description" name="description">
             </div>
             <div class="form-group">
                 <label for="dob">Photo</label>
-                <input type="text" class="w3-input w3-border" id="photo" name="photo" required>
+                <input type="text" class="w3-input w3-border" id="photo" name="photo">
             </div>
             <div class="form-group">
                 <label for="tarif">Tarif par semaine </label>

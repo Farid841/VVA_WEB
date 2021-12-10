@@ -58,27 +58,28 @@ class crud
         }
     }
 
-    public function edithebergement(
-        $noheb,
-        $codetypeheb,
-        $nomheb,
-        $bnplaceheb,
-        $surfaceheb,
-        $internet,
-        $anneeheb,
-        $secteurheb,
-        $orientationheb,
-        $etatheb,
-        $description,
-        $photoheb,
-        $tarifsemheb
-    ) {
+    public function edithebergement($param)
+    {
+
         try {
-            $sql = "UPDATE `hebergement` SET noheb=:noheb, codetypeheb=:codetypeheb, nomheb=:nomheb, nbplaceheb=:bnplaceheb, surfaceheb=:surfaceheb, internet=:internet, anneeheb=:anneheb, secteurheb=secteurheb, orientationheb=:orientationheb,
-                etatheb=:etatheb, description=:description, photoheb=:photoheb, tarifsemheb=:tarifsemheb WHERE noheb = :noheb ";
+            $sql = "UPDATE `hebergement` SET
+            codetypeheb     =?,
+            nomheb          =?,
+            nbplaceheb      =?,
+            surfaceheb      =?, 
+            internet        =?, 
+            anneeheb        =?,
+            secteurheb      =?, 
+            orientationheb  =?,
+            etatheb         =?,
+            descriheb       =?,
+            photoheb        =?, 
+            tarifsemheb     =?
+            WHERE 
+            noheb           =?";
             $stmt = $this->db->prepare($sql);
-            // bind all placeholders to the actual values
-            $stmt->bindparam(':noheb', $noheb);
+
+            /*$stmt->bindparam(':noheb', $noheb);
             $stmt->bindparam(':codetypeheb', $codetypeheb);
             $stmt->bindparam(':nomheb', $nomheb);
             $stmt->bindparam(':bnplaceheb', $bnplaceheb);
@@ -88,23 +89,22 @@ class crud
             $stmt->bindparam(':secteurheb', $secteurheb);
             $stmt->bindparam(':orientationheb', $orientationheb);
             $stmt->bindparam(':etatheb', $etatheb);
-            $stmt->bindparam(':description', $description);
+            $stmt->bindparam(':describheb', $description);
             $stmt->bindparam(':photoheb', $photoheb);
-            $stmt->bindparam(':tarifsemheb', $tarifsemheb);
+            $stmt->bindparam(':tarifsemheb', $tarifsemheb);*/
             // execute statement
-            $stmt->execute();
+            $stmt->execute($param);
             return true;
         } catch (PDOException $e) {
             echo $e->getMessage();
-            return false;
+            return  false;
         }
     }
-    // le reste est non traité
+
     public function gethebergements()
     {
         try {
-            $sql = "SELECT `NOHEB`, `NOMHEB`, `NBPLACEHEB`, `SURFACEHEB`, `INTERNET`, `ANNEEHEB`, `SECTEURHEB`, `ORIENTATIONHEB`, `ETATHEB`, `DESCRIHEB`, `PHOTOHEB`, `TARIFSEMHEB`, NOMTYPEHEB FROM `hebergement` , type_heb WHERE hebergement.CODETYPEHEB=type_heb.CODETYPEHEB
-            ";
+            $sql = "SELECT `NOHEB`, `NOMHEB`, `NBPLACEHEB`, `SURFACEHEB`, `INTERNET`, `ANNEEHEB`, `SECTEURHEB`, `ORIENTATIONHEB`, `ETATHEB`, `DESCRIHEB`, `PHOTOHEB`, `TARIFSEMHEB`, NOMTYPEHEB FROM `hebergement` , type_heb WHERE hebergement.CODETYPEHEB=type_heb.CODETYPEHEB";
             $result = $this->db->query($sql);
             return $result;
         } catch (PDOException $e) {
@@ -113,14 +113,14 @@ class crud
         }
     }
 
-    public function getHebergementDetails($id)
+    public function getHebergementById($id)
     {
         try {
-            $sql = "SELECT DISTINCT *  FROM  hebergement, type_heb, resa, etat_resa, semaine WHERE hebergement.CODETYPEHEB=:id AND hebergement.CODETYPEHEB = type_heb.CODETYPEHEB AND hebergement.NOHEB = resa.NOHEB AND resa.CODEETATRESA = etat_resa.CODEETATRESA  And resa.DATEDEBSEM = semaine.DATEDEBSEM";
+            $sql = "SELECT  `NOHEB`, `CODETYPEHEB`, `NOMHEB`, `NBPLACEHEB`, `SURFACEHEB`, `INTERNET`, `ANNEEHEB`, `SECTEURHEB`, `ORIENTATIONHEB`, `ETATHEB`, `DESCRIHEB`, `PHOTOHEB`, `TARIFSEMHEB` FROM `hebergement` WHERE NOHEB=:id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':id', $id);
             $stmt->execute();
-            $result = $stmt->fetch();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -142,7 +142,7 @@ class crud
         }
     }
 
-    public function getTypeHebergement()
+    public function getAllTypeHebergement()
     {
         try {
             $sql = "SELECT * FROM type_heb ";
@@ -154,10 +154,10 @@ class crud
         }
     }
 
-    public function getSpecialtyById($id)
+    public function getTypeHebById($id)
     {
         try {
-            $sql = "SELECT * FROM type_heb where codetypeheb = :id";
+            $sql = "SELECT NOMTYPEHEB FROM type_heb where codetypeheb = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindparam(':id', $id);
             $stmt->execute();
@@ -168,13 +168,40 @@ class crud
             return false;
         }
     }
+
     public function GetSemaine()
     {
         try {
-            $sql = "SELECT * FROM type_heb ";
+            $sql = "SELECT * FROM semaine ";
             $stmt = $this->db->prepare($sql);
             $stmt->execute();
-            $result = $stmt->fetch();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+    public function GetNbPlace()
+    {
+        try {
+            $sql = "SELECT DISTINCT NBPLACEHEB FROM `hebergement`";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+    public function GetSecteur()
+    {
+        try {
+            $sql = "SELECT DISTINCT SECTEURHEB FROM `hebergement`";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (PDOException $e) {
             echo $e->getMessage();
